@@ -1,21 +1,34 @@
 ---
 name: Release Please
+
 on:
   workflow_call:
     inputs:
+      app-id:
+        default: "2164640"
+        required: false
+        description: |
+          The app ID of the Github App with necessary api-permissions to publish releases.
+          Defaults to sn-atmos release bot id.
+        type: string
       config-file:
+        required: false
+        description: |
+          Path to the release-please config in the repository
+          example: release-please-config.json
         type: string
-        description: path to the release-please config in the repository
-        default: release-please-config.json
       manifest-file:
+        required: false
+        description: |
+          Path to the release-please versions manifest.
+          Example: .release-please-manifest.json
         type: string
-        description: path to the release-please versions manifest
-        default: .release-please-manifest.json
     secrets:
-      STATNETT_BOT_APP_ID:
+      RELEASE_BOT_PRIVATE_KEY:
         required: true
-      STATNETT_BOT_PRIVATE_KEY:
-        required: true
+        description: |
+          The private key of the Github app from inputs.appID.
+          Use secrets: inherit in your github action to inherit organization level secrets.
     outputs:
       release_created:
         description: true if the release was created, false otherwise
@@ -33,7 +46,11 @@ on:
         description: sha that a GitHub release was tagged at
         value: ${{ jobs.release-please.outputs.sha }}
 
-permissions: {}
+permissions:
+  contents: write
+  pull-requests: write
+  issues: write
+
 jobs:
   release-please:
     runs-on: ubuntu-latest
@@ -50,11 +67,11 @@ jobs:
       - uses: actions/create-github-app-token@67018539274d69449ef7c02e8e71183d1719ab42 # v2
         id: token
         with:
-          app-id: ${{ vars.APP_ID }}
-          private-key: ${{ secrets.APP_PRIVATE_KEY }}
+          app-id: ${{ inputs.app-id }}
+          private-key: ${{ secrets.RELEASE_BOT_PRIVATE_KEY }}
       - id: release
         uses: googleapis/release-please-action@c2a5a2bd6a758a0937f1ddb1e8950609867ed15c # v4.3.0
         with:
-          config-file: ${{ inputs.config-file }}
-          manifest-file: ${{ inputs.manifest-file }}
+          config-file: ${{ inputs.config-file != '' && inputs.config-file || '' }}
+          manifest-file: ${{ inputs.manifest-file != '' && inputs.manifest-file || '' }}
           token: ${{ steps.token.outputs.token }}
