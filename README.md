@@ -52,6 +52,18 @@ A handy workflow for jobs that rely on tags. This automates tags and changelog g
 
 ### Usage
 
+Add `release-please-config.json` in your project root, or specify [config-file](.github/workflows/release-please.yaml#L14) path.
+
+```json
+{
+  "$schema": "https://raw.githubusercontent.com/googleapis/release-please/main/schemas/config.json",
+  "release-type": "go",
+  "include-component-in-tag": false
+}
+```
+
+Check. [readme](https://github.com/googleapis/release-please/tree/main?tab=readme-ov-file#strategy-language-types-supported) and [docs](https://github.com/googleapis/repo-automation-bots/tree/main/packages/release-please#using-a-manifest-config) for more configuration options.
+
 ```yaml
 on:
   push:
