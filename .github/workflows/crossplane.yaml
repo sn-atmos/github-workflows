@@ -49,4 +49,4 @@ jobs:
 
       - name: Push Crossplane Package
         if: startsWith(github.ref, 'refs/tags/v')
-        run: ./crossplane xpkg push -f pkg.xpkg ghcr.io/${{ GITHUB_REPOSITORY }}:${{ env.TAG }}
+        run: ./crossplane xpkg push -f pkg.xpkg ghcr.io/${{ github_repository }}:${{ env.TAG }}
