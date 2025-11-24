@@ -20,11 +20,6 @@ jobs:
       - name: Extract version from tag
         run: echo "TAG=$(basename $GITHUB_REF_NAME)" >> $GITHUB_ENV
 
-      - name: Setup QEMU
-        uses: docker/setup-qemu-action@v3
-        with:
-          platforms: all
-
       - name: Setup Docker Buildx
         uses: docker/setup-buildx-action@v3
         with:
