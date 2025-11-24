@@ -12,15 +12,16 @@ on:
           Defaults to sn-atmos release bot id.
         type: string
       configFile:
-        default: release-please-config.json
         required: false
-        description: Path to the release-please config in the repository
+        description: |
+          Path to the release-please config in the repository
+          example: release-please-config.json
         type: string
       manifestFile:
-        default: .release-please-manifest.json
         required: false
         description: |
           Path to the release-please versions manifest.
+          Example: .release-please-manifest.json
         type: string
     secrets:
       RELEASE_BOT_PRIVATE_KEY:
