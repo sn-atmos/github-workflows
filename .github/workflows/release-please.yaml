@@ -24,6 +24,9 @@ on:
     secrets:
       RELEASE_BOT_PRIVATE_KEY:
         required: true
+        description: |
+          The private key of the Github app from inputs.appID.
+          Use secrets: inherit in your github action to inherit organization level secrets.
     outputs:
       release_created:
         description: true if the release was created, false otherwise
@@ -41,7 +44,10 @@ on:
         description: sha that a GitHub release was tagged at
         value: ${{ jobs.release-please.outputs.sha }}
 
-permissions: {}
+permissions:
+  contents: write
+  pull-requests: write
+  issues: write
 
 jobs:
   release-please:
