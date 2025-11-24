@@ -4,20 +4,20 @@ name: Release Please
 on:
   workflow_call:
     inputs:
-      appID:
+      app-id:
         default: "2164640"
         required: false
         description: |
           The app ID of the Github App with necessary api-permissions to publish releases.
           Defaults to sn-atmos release bot id.
         type: string
-      configFile:
+      config-file:
         required: false
         description: |
           Path to the release-please config in the repository
           example: release-please-config.json
         type: string
-      manifestFile:
+      manifest-file:
         required: false
         description: |
           Path to the release-please versions manifest.
@@ -67,11 +67,11 @@ jobs:
       - uses: actions/create-github-app-token@67018539274d69449ef7c02e8e71183d1719ab42 # v2
         id: token
         with:
-          app-id: ${{ inputs.appID }}
+          app-id: ${{ inputs.app-id }}
           private-key: ${{ secrets.RELEASE_BOT_PRIVATE_KEY }}
       - id: release
         uses: googleapis/release-please-action@c2a5a2bd6a758a0937f1ddb1e8950609867ed15c # v4.3.0
         with:
-          config-file: ${{ inputs.configFile }}
-          manifest-file: ${{ inputs.manifestFile }}
+          config-file: ${{ inputs.config-file }}
+          manifest-file: ${{ inputs.manifest-file }}
           token: ${{ steps.token.outputs.token }}

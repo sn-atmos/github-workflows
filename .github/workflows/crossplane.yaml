@@ -4,7 +4,7 @@ name: Build and publish crossplane package
 on:
   workflow_call:
     inputs:
-      packageRoot:
+      package-root:
         description: "the root directory of the crossplane package"
         required: false
         default: "apis/"
@@ -45,7 +45,7 @@ jobs:
         run: "curl -sL https://raw.githubusercontent.com/crossplane/crossplane/master/install.sh | sh"
 
       - name: Build Configuration package
-        run: ./crossplane xpkg build --package-file=pkg.xpkg --package-root=${{ inputs.packageRoot }}
+        run: ./crossplane xpkg build --package-file=pkg.xpkg --package-root=${{ inputs.package-root }}
 
       - name: Push Crossplane Package
         if: startsWith(github.ref, 'refs/tags/v')
