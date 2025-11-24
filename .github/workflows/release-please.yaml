@@ -19,7 +19,8 @@ on:
       manifestFile:
         default: .release-please-manifest.json
         required: false
-        description: Path to the release-please versions manifest
+        description: |
+          Path to the release-please versions manifest.
         type: string
     secrets:
       RELEASE_BOT_PRIVATE_KEY:
@@ -70,6 +71,6 @@ jobs:
       - id: release
         uses: googleapis/release-please-action@c2a5a2bd6a758a0937f1ddb1e8950609867ed15c # v4.3.0
         with:
-          config-file: ${{ inputs.config-file }}
-          manifest-file: ${{ inputs.manifest-file }}
+          config-file: ${{ inputs.configFile }}
+          manifest-file: ${{ inputs.manifestFile }}
           token: ${{ steps.token.outputs.token }}
