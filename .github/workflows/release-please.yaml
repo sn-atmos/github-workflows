@@ -1,20 +1,28 @@
 ---
 name: Release Please
+
 on:
   workflow_call:
     inputs:
-      config-file:
+      appID:
+        default: "2164640"
+        required: false
+        description: |
+          The app ID of the Github App with necessary api-permissions to publish releases.
+          Defaults to sn-atmos release bot id.
         type: string
-        description: path to the release-please config in the repository
+      configFile:
         default: release-please-config.json
-      manifest-file:
+        required: false
+        description: Path to the release-please config in the repository
         type: string
-        description: path to the release-please versions manifest
+      manifestFile:
         default: .release-please-manifest.json
+        required: false
+        description: Path to the release-please versions manifest
+        type: string
     secrets:
-      STATNETT_BOT_APP_ID:
-        required: true
-      STATNETT_BOT_PRIVATE_KEY:
+      RELEASE_BOT_PRIVATE_KEY:
         required: true
     outputs:
       release_created:
@@ -34,6 +42,7 @@ on:
         value: ${{ jobs.release-please.outputs.sha }}
 
 permissions: {}
+
 jobs:
   release-please:
     runs-on: ubuntu-latest
@@ -50,8 +59,8 @@ jobs:
       - uses: actions/create-github-app-token@67018539274d69449ef7c02e8e71183d1719ab42 # v2
         id: token
         with:
-          app-id: ${{ vars.APP_ID }}
-          private-key: ${{ secrets.APP_PRIVATE_KEY }}
+          app-id: ${{ inputs.appID }}
+          private-key: ${{ secrets.RELEASE_BOT_PRIVATE_KEY }}
       - id: release
         uses: googleapis/release-please-action@c2a5a2bd6a758a0937f1ddb1e8950609867ed15c # v4.3.0
         with:
