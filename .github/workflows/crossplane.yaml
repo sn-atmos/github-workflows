@@ -44,7 +44,9 @@ jobs:
           && chmod +x /usr/local/bin/crossplane
 
       - name: Build Configuration package
-        run: crossplane xpkg build --package-file=pkg.xpkg --package-root=${{ inputs.package-root }}
+        run: |
+          find ${{ inputs.package-root }} -type f -name kustomization.yaml -delete
+          crossplane xpkg build --package-file=pkg.xpkg --package-root=${{ inputs.package-root }}
 
       - name: Push Crossplane Package
         if: startsWith(github.ref, 'refs/tags/v')
