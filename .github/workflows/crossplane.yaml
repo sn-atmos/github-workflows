@@ -12,7 +12,7 @@ on:
       ignore:
         description: Comma-separated file paths, specified relative to package-root, to exclude from the package. Wildcards are supported. Directories cannot be excluded.
         required: false
-        default: kustomization.yaml
+        default: kustomization.yaml,*/kustomization.yaml,*/*/kustomization.yaml
         type: string
 
 jobs:
