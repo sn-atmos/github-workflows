@@ -5,9 +5,14 @@ on:
   workflow_call:
     inputs:
       package-root:
-        description: "the root directory of the crossplane package"
+        description: The directory that contains the package's crossplane.yaml file.
         required: false
-        default: "apis/"
+        default: apis/
+        type: string
+      ignore:
+        description: Comma-separated file paths, specified relative to package-root, to exclude from the package. Wildcards are supported. Directories cannot be excluded.
+        required: false
+        default: kustomization.yaml,*/kustomization.yaml,*/*/kustomization.yaml
         type: string
 
 jobs:
@@ -44,9 +49,7 @@ jobs:
           && chmod +x /usr/local/bin/crossplane
 
       - name: Build Configuration package
-        run: |
-          find ${{ inputs.package-root }} -type f -name kustomization.yaml -delete
-          crossplane xpkg build --package-file=pkg.xpkg --package-root=${{ inputs.package-root }}
+        run: crossplane xpkg build --package-file=pkg.xpkg --package-root=${{ inputs.package-root }} --ignore={{ inputs.ignore }}
 
       - name: Push Crossplane Package
         if: startsWith(github.ref, 'refs/tags/v')
