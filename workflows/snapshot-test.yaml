@@ -1,0 +1,57 @@
+---
+name: Snapshot Test
+on:
+  workflow_dispatch: {}
+  push: {}
+
+jobs:
+  snapshot-test:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repo
+        uses: actions/checkout@v5
+        with:
+          fetch-depth: 0
+
+      - name: Generate CI function config
+        run: yq -i '.metadata.annotations."render.crossplane.io/runtime-development-target"="dns:///localhost:\(9000 + document_index)"' dev-functions.yaml
+
+      - name: Start function containers
+        run: |
+          port=9000
+          yq -N -r '.spec.package' dev-functions.yaml | while read image; do
+            docker run -d --name function-$port -p $port:9443 $image --insecure
+            ((port++))
+          done
+
+      - name: Install deps
+        run: >
+          sudo apt-get update
+          && sudo apt-get install -y --no-install-recommends
+          ca-certificates
+          curl
+          make
+          && sudo rm -rf /var/lib/apt/lists/*
+
+      - name: Install crossplane cli
+        run: >
+          curl -sSfLo /usr/local/bin/crossplane
+          https://releases.crossplane.io/stable/current/bin/linux_amd64/crank
+          && chmod +x /usr/local/bin/crossplane
+
+      - name: Install dyff
+        run: >
+          curl -sSfL
+          https://github.com/homeport/dyff/releases/download/v1.10.2/dyff_1.10.2_linux_amd64.tar.gz
+          | tar -xzC /usr/local/bin dyff
+
+      - name: Install yq
+        run: >
+          curl -sSfL
+          https://github.com/mikefarah/yq/releases/download/v4.48.1/yq_linux_amd64.tar.gz
+          | tar -xzC /usr/local/bin --transform='s/yq_linux_amd64/yq/' ./yq_linux_amd64
+
+      - name: Test
+        run: |
+          make test
