@@ -1,7 +1,7 @@
 ---
 name: Snapshot Test
 on:
-  workflow_dispatch: {}
+  workflow_call: {}
 
 jobs:
   snapshot-test:
