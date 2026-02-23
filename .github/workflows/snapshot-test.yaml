@@ -32,6 +32,12 @@ jobs:
         run: |
           make test
 
+      - name: Cache crossplane package schemas
+        uses: actions/cache@v5
+        with:
+          path: ~/.crossplane/cache
+          key: crossplane-cache
+
       - name: Validate
         continue-on-error: true
         run: |
