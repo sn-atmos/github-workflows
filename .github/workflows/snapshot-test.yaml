@@ -1,7 +1,14 @@
 ---
 name: Snapshot Test
 on:
-  workflow_call: {}
+  workflow_call:
+    inputs:
+      xtest_version:
+        type: string
+        default: v0.1.12
+      crossplane_version:
+        type: string
+        default: v2.3.2
 
 jobs:
   snapshot-test:
@@ -22,16 +29,21 @@ jobs:
           make
           && sudo rm -rf /var/lib/apt/lists/*
 
+      - name: Install oras
+        uses: oras-project/setup-oras@v1
+
       - name: Install xtest
-        run: >
-          curl -sSfL
-          https://github.com/sn-atmos/crossplane/releases/download/v0.5.0/crossplane_0.5.0_linux_amd64.tar.gz
-          | tar -xzC /usr/local/bin --transform 's|crossplane|atmos-crossplane|' crossplane
+        run: |
+          TMP="$(mktemp -d)"
+          oras pull ghcr.io/sn-atmos/xtest_linux_x86_64:${{ inputs.xtest_version }} -o "$TMP"
+          sudo cp "$TMP/xtest" /usr/local/bin/xtest
+          sudo chmod 755 /usr/local/bin/xtest
+          rm -rf "$TMP"
 
       - name: Install Crossplane binary
         run: >
           curl -sSfo /usr/local/bin/crossplane-bin
-          https://releases.crossplane.io/stable/v2.3.2/bin/linux_amd64/crossplane
+          https://releases.crossplane.io/stable/${{ inputs.crossplane_version }}/bin/linux_amd64/crossplane
           | chmod +x /usr/local/bin/crossplane-bin
 
       - name: Test
