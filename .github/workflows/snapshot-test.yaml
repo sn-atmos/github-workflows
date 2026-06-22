@@ -44,7 +44,7 @@ jobs:
         run: >
           curl -sSfo /usr/local/bin/crossplane-bin
           https://releases.crossplane.io/stable/${{ inputs.crossplane_version }}/bin/linux_amd64/crossplane
-          | chmod +x /usr/local/bin/crossplane-bin
+          && chmod +x /usr/local/bin/crossplane-bin
 
       - name: Test
         run: |
