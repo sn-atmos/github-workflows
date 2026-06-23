@@ -5,7 +5,7 @@ on:
     inputs:
       xtest_version:
         type: string
-        default: v0.1.15
+        default: v0.1.16
       crossplane_version:
         type: string
         default: v2.3.2
@@ -54,7 +54,7 @@ jobs:
         with:
           path: ~/.crossplane/cache
           key: crossplane-cache
-      
+
       - name: Cache xtest package schemas
         uses: actions/cache@v5
         with:
