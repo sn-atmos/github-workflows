@@ -5,7 +5,7 @@ on:
     inputs:
       xtest_version:
         type: string
-        default: v0.1.14
+        default: v0.1.15
       crossplane_version:
         type: string
         default: v2.3.2
@@ -13,7 +13,6 @@ on:
 jobs:
   snapshot-test:
     runs-on: ubuntu-latest
-
     steps:
       - name: Checkout repo
         uses: actions/checkout@v6
@@ -36,8 +35,8 @@ jobs:
         run: |
           TMP="$(mktemp -d)"
           oras pull ghcr.io/sn-atmos/xtest_linux_x86_64:${{ inputs.xtest_version }} -o "$TMP"
-          sudo cp "$TMP/xtest" /usr/local/bin/xtest
-          sudo chmod 755 /usr/local/bin/xtest
+          cp "$TMP/xtest" /usr/local/bin/xtest
+          chmod +x /usr/local/bin/xtest
           rm -rf "$TMP"
 
       - name: Install Crossplane binary
