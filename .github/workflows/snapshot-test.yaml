@@ -8,7 +8,7 @@ on:
         default: v0.1.17
       crossplane_version:
         type: string
-        default: v2.3.2
+        default: v2.3.4
 
 jobs:
   snapshot-test:
