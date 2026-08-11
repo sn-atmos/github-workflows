@@ -5,7 +5,7 @@ on:
     inputs:
       xtest_version:
         type: string
-        default: v0.2.0
+        default: v0.2.1
       crossplane_version:
         type: string
         default: v2.3.4
