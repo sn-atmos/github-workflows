@@ -45,7 +45,7 @@ jobs:
       - name: Install Crossplane CLI
         run: >
           curl -sSfLo /usr/local/bin/crossplane
-          https://releases.crossplane.io/stable/current/bin/linux_amd64/crank
+          https://cli.crossplane.io/stable/current/bin/linux_amd64/crossplane
           && chmod +x /usr/local/bin/crossplane
 
       - name: Build Configuration package
