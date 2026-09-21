@@ -9,6 +9,9 @@ on:
       crossplane_version:
         type: string
         default: v2.3.4
+      crossplane_cli_version:
+        type: string
+        default: ""
       test_target:
         type: string
         default: test
@@ -62,6 +65,15 @@ jobs:
         with:
           path: ~/.crossplane/cache
           key: crossplane-cache
+
+      - name: Install Crossplane CLI
+        if: ${{ inputs.crossplane_cli_version != '' }}
+        env:
+          CROSSPLANE_CLI_VERSION: ${{ inputs.crossplane_cli_version }}
+        run: >
+          curl -sSfLo /usr/local/bin/crossplane
+          "https://cli.crossplane.io/stable/${CROSSPLANE_CLI_VERSION}/bin/linux_amd64/crossplane"
+          && chmod +x /usr/local/bin/crossplane
 
       - name: Cache xtest package schemas
         uses: actions/cache@v5
