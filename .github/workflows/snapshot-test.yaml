@@ -9,6 +9,18 @@ on:
       crossplane_version:
         type: string
         default: v2.3.4
+      test_target:
+        type: string
+        default: test
+      validate:
+        type: boolean
+        default: true
+      artifact_name:
+        type: string
+        default: test-results
+      artifact_path:
+        type: string
+        default: ""
 
 jobs:
   snapshot-test:
@@ -45,10 +57,6 @@ jobs:
           https://releases.crossplane.io/stable/${{ inputs.crossplane_version }}/bin/linux_amd64/crossplane
           && chmod +x /usr/local/bin/crossplane-bin
 
-      - name: Test
-        run: |
-          make test
-
       - name: Cache crossplane package schemas
         uses: actions/cache@v5
         with:
@@ -58,10 +66,27 @@ jobs:
       - name: Cache xtest package schemas
         uses: actions/cache@v5
         with:
-          path: ~/.cache/xtest
-          key: xtest-cache
+          path: |
+            ~/.cache/xtest
+            .cache/validation
+          key: xtest-${{ runner.os }}-${{ inputs.xtest_version }}-${{ hashFiles('apis/package.yaml', 'Makefile') }}
+
+      - name: Test
+        env:
+          TEST_TARGET: ${{ inputs.test_target }}
+        run: make "$TEST_TARGET"
 
       - name: Validate
+        if: ${{ inputs.validate }}
         continue-on-error: true
         run: |
           make validate
+
+      - name: Upload test results
+        if: ${{ always() && inputs.artifact_path != '' }}
+        uses: actions/upload-artifact@v4
+        with:
+          name: ${{ inputs.artifact_name }}
+          path: ${{ inputs.artifact_path }}
+          include-hidden-files: true
+          retention-days: 7
