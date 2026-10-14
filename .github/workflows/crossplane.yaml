@@ -62,7 +62,7 @@ jobs:
 
       - name: Build Crossplane project
         if: ${{ inputs.project }}
-        run: crossplane project build --project-file="${{ inputs.project-path }}" --repository="ghcr.io/${{ github.repository }}"
+        run: crossplane project build --project-file="${{ inputs.project-file-path }}" --repository="ghcr.io/${{ github.repository }}"
 
       - name: Push Crossplane Package
         if: startsWith(github.ref, 'refs/tags/v') && !inputs.project
