@@ -70,4 +70,4 @@ jobs:
 
       - name: Push Crossplane project
         if: startsWith(github.ref, 'refs/tags/v') && inputs.project
-        run: crossplane project push --project-file="${{ inputs.project-path }}" --repository="ghcr.io/${{ github.repository }}" --tag="${{ env.TAG }}"
+        run: crossplane project push --project-file="${{ inputs.project-file-path }}" --repository="ghcr.io/${{ github.repository }}" --tag="${{ env.TAG }}"
