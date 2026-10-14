@@ -17,7 +17,7 @@ on:
       project:
         type: boolean
         default: false
-        description: "Build project based on a CrossPlane project file"
+        description: Build project based on a CrossPlane project file.
       project-path:
         type: string
         default: crossplane-project.yaml
