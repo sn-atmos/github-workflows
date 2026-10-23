@@ -45,21 +45,27 @@ jobs:
           https://releases.crossplane.io/stable/${{ inputs.crossplane_version }}/bin/linux_amd64/crossplane
           && chmod +x /usr/local/bin/crossplane-bin
 
-      - name: Test
-        run: |
-          make test
-
       - name: Cache crossplane package schemas
         uses: actions/cache@v5
         with:
           path: ~/.crossplane/cache
-          key: crossplane-cache
+          key: crossplane-${{ inputs.crossplane_version }}
 
       - name: Cache xtest package schemas
         uses: actions/cache@v5
         with:
           path: ~/.cache/xtest
-          key: xtest-cache
+          key: xtest-${{ inputs.xtest_version }}
+
+      - name: Cache schemas
+        uses: actions/cache@v5
+        with:
+          path: schemas
+          key: schemas-crossplane-${{ inputs.crossplane_version }}-xtest-${{ inputs.xtest_version }}
+
+      - name: Test
+        run: |
+          make test
 
       - name: Validate
         continue-on-error: true
