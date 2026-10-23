@@ -5,8 +5,9 @@ on:
   workflow_call:
     inputs:
       crossplane_version:
+        description: Crossplane CLI version
         type: string
-        default: v2.4.2
+        default: v2.5.0
       package-root:
         description: The directory that contains the package's crossplane.yaml file.
         required: false
@@ -90,7 +91,7 @@ jobs:
         if: steps.cache-crossplane-cli.outputs.cache-hit != 'true'
         run: >
           curl -sSfLo "$HOME/.local/bin/crossplane"
-          https://cli.crossplane.io/stable/${{ inputs.crossplane_version }}/bin/linux_amd64/crossplane
+          https://releases.crossplane.io/stable/${{ inputs.crossplane_version }}/bin/linux_amd64/crossplane
           && chmod +x "$HOME/.local/bin/crossplane"
 
       - name: Build Configuration package
