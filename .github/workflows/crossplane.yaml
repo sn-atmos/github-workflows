@@ -91,7 +91,7 @@ jobs:
         if: steps.cache-crossplane-cli.outputs.cache-hit != 'true'
         run: >
           curl -sSfLo "$HOME/.local/bin/crossplane"
-          https://releases.crossplane.io/stable/${{ inputs.crossplane_version }}/bin/linux_amd64/crossplane
+          https://cli.crossplane.io/stable/${{ inputs.crossplane_version }}/bin/linux_amd64/crossplane
           && chmod +x "$HOME/.local/bin/crossplane"
 
       - name: Build Configuration package
