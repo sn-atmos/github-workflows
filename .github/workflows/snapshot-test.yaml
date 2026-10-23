@@ -40,7 +40,7 @@ jobs:
         id: cache-xtest-binary
         uses: actions/cache@v5
         with:
-          path: ~/.local/bin/xtest
+          path: $HOME/.local/bin/xtest
           key: xtest-binary-${{ inputs.xtest_version }}
 
       - name: Install xtest
@@ -56,7 +56,7 @@ jobs:
         id: cache-crossplane-binary
         uses: actions/cache@v5
         with:
-          path: ~/.local/bin/crossplane-bin
+          path: $HOME/.local/bin/crossplane-bin
           key: crossplane-binary-${{ inputs.crossplane_version }}
 
       - name: Install Crossplane binary
