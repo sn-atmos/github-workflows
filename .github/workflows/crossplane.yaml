@@ -4,6 +4,13 @@ name: Build and publish crossplane package
 on:
   workflow_call:
     inputs:
+      xtest_version:
+        description: Snapshot-test version used to select shared xtest and schema caches.
+        type: string
+        default: v0.3.6
+      crossplane_version:
+        type: string
+        default: v2.4.2
       package-root:
         description: The directory that contains the package's crossplane.yaml file.
         required: false
@@ -50,11 +57,63 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v5
 
+      - name: Add local bin to PATH
+        run: |
+          mkdir -p "$HOME/.local/bin"
+          echo "$HOME/.local/bin" >> "$GITHUB_PATH"
+
+      - name: Cache Crossplane CLI
+        id: cache-crossplane-cli
+        uses: actions/cache@v5
+        with:
+          path: ~/.local/bin/crossplane
+          key: crossplane-cli-${{ inputs.crossplane_version }}
+
+      - name: Cache xtest binary
+        uses: actions/cache@v5
+        with:
+          path: ~/.local/bin/xtest
+          key: xtest-binary-${{ inputs.xtest_version }}
+
+      - name: Cache crossplane package schema cache
+        uses: actions/cache@v5
+        with:
+          path: ~/.crossplane/cache
+          key: crossplane-${{ inputs.crossplane_version }}
+
+      - name: Cache crossplane cache
+        uses: actions/cache@v5
+        with:
+          path: ~/.cache/crossplane
+          key: crossplane-xdg-${{ inputs.crossplane_version }}
+
+      - name: Cache xtest cache
+        uses: actions/cache@v5
+        with:
+          path: ~/.cache/xtest
+          key: xtest-${{ inputs.xtest_version }}
+
+      - name: Cache Go build and module cache
+        uses: actions/cache@v5
+        with:
+          path: |
+            ~/.cache/go-build
+            ~/go/pkg/mod
+          key: go-${{ github.run_id }}
+          restore-keys: go-
+
+      - name: Cache schemas
+        uses: actions/cache@v5
+        with:
+          path: schemas
+          key: schemas-crossplane-${{ inputs.crossplane_version }}-xtest-${{ inputs.xtest_version }}
+
       - name: Install Crossplane CLI
+        if: steps.cache-crossplane-cli.outputs.cache-hit != 'true'
         run: >
-          curl -sSfLo /usr/local/bin/crossplane
-          https://cli.crossplane.io/stable/current/bin/linux_amd64/crossplane
-          && chmod +x /usr/local/bin/crossplane
+          curl -sSfLo "$HOME/.local/bin/crossplane"
+          https://cli.crossplane.io/stable/${{ inputs.crossplane_version }}/bin/linux_amd64/crossplane
+          && chmod +x "$HOME/.local/bin/crossplane"
 
       - name: Build Configuration package
         if: ${{ !inputs.project }}
