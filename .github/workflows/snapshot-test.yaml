@@ -31,19 +31,40 @@ jobs:
       - name: Install oras
         uses: oras-project/setup-oras@v1
 
+      - name: Add local bin to PATH
+        run: |
+          mkdir -p "$HOME/.local/bin"
+          echo "$HOME/.local/bin" >> "$GITHUB_PATH"
+
+      - name: Cache xtest binary
+        id: cache-xtest-binary
+        uses: actions/cache@v5
+        with:
+          path: ~/.local/bin/xtest
+          key: xtest-binary-${{ inputs.xtest_version }}
+
       - name: Install xtest
+        if: steps.cache-xtest-binary.outputs.cache-hit != 'true'
         run: |
           TMP="$(mktemp -d)"
           oras pull ghcr.io/sn-atmos/xtest_linux_x86_64:${{ inputs.xtest_version }} -o "$TMP"
-          cp "$TMP/xtest" /usr/local/bin/xtest
-          chmod +x /usr/local/bin/xtest
+          cp "$TMP/xtest" "$HOME/.local/bin/xtest"
+          chmod +x "$HOME/.local/bin/xtest"
           rm -rf "$TMP"
 
+      - name: Cache Crossplane binary
+        id: cache-crossplane-binary
+        uses: actions/cache@v5
+        with:
+          path: ~/.local/bin/crossplane-bin
+          key: crossplane-binary-${{ inputs.crossplane_version }}
+
       - name: Install Crossplane binary
+        if: steps.cache-crossplane-binary.outputs.cache-hit != 'true'
         run: >
-          curl -sSfo /usr/local/bin/crossplane-bin
+          curl -sSfo "$HOME/.local/bin/crossplane-bin"
           https://releases.crossplane.io/stable/${{ inputs.crossplane_version }}/bin/linux_amd64/crossplane
-          && chmod +x /usr/local/bin/crossplane-bin
+          && chmod +x "$HOME/.local/bin/crossplane-bin"
 
       - name: Cache crossplane package schemas
         uses: actions/cache@v5
@@ -51,7 +72,12 @@ jobs:
           path: ~/.crossplane/cache
           key: crossplane-${{ inputs.crossplane_version }}
 
-      - name: Cache xtest package schemas
+      - name: Cache crossplane
+        uses: actions/cache@v5
+        with:
+          path: ~/.cache/crossplane
+
+      - name: Cache xtest
         uses: actions/cache@v5
         with:
           path: ~/.cache/xtest
