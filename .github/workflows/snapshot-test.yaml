@@ -38,7 +38,7 @@ jobs:
 
       - name: Cache xtest binary
         id: cache-xtest-binary
-        uses: actions/cache@v5
+        uses: actions/cache@v6
         with:
           path: ~/.local/bin/xtest
           key: xtest-binary-${{ inputs.xtest_version }}
@@ -54,7 +54,7 @@ jobs:
 
       - name: Cache Crossplane binary
         id: cache-crossplane-binary
-        uses: actions/cache@v5
+        uses: actions/cache@v6
         with:
           path: ~/.local/bin/crossplane-bin
           key: crossplane-binary-${{ inputs.crossplane_version }}
@@ -67,25 +67,25 @@ jobs:
           && chmod +x "$HOME/.local/bin/crossplane-bin"
 
       - name: Cache crossplane package schemas
-        uses: actions/cache@v5
+        uses: actions/cache@v6
         with:
           path: ~/.crossplane/cache
           key: crossplane-${{ inputs.crossplane_version }}
 
       - name: Cache crossplane
-        uses: actions/cache@v5
+        uses: actions/cache@v6
         with:
           path: ~/.cache/crossplane
           key: crossplane-xdg-${{ inputs.crossplane_version }}
 
       - name: Cache xtest
-        uses: actions/cache@v5
+        uses: actions/cache@v6
         with:
           path: ~/.cache/xtest
           key: xtest-${{ inputs.xtest_version }}
 
       - name: Cache Go build and module cache
-        uses: actions/cache@v5
+        uses: actions/cache@v6
         with:
           path: |
             ~/.cache/go-build
@@ -94,7 +94,7 @@ jobs:
           restore-keys: go-
 
       - name: Cache schemas
-        uses: actions/cache@v5
+        uses: actions/cache@v6
         with:
           path: schemas
           key: schemas-crossplane-${{ inputs.crossplane_version }}-xtest-${{ inputs.xtest_version }}
