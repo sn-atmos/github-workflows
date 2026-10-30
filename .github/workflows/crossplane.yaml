@@ -61,25 +61,25 @@ jobs:
 
       - name: Cache Crossplane CLI
         id: cache-crossplane-cli
-        uses: actions/cache@v5
+        uses: actions/cache@v6
         with:
           path: ~/.local/bin/crossplane
           key: crossplane-cli-${{ inputs.crossplane_version }}
 
       - name: Cache crossplane package schema cache
-        uses: actions/cache@v5
+        uses: actions/cache@v6
         with:
           path: ~/.crossplane/cache
           key: crossplane-${{ inputs.crossplane_version }}
 
       - name: Cache crossplane cache
-        uses: actions/cache@v5
+        uses: actions/cache@v6
         with:
           path: ~/.cache/crossplane
           key: crossplane-xdg-${{ inputs.crossplane_version }}
 
       - name: Cache Go build and module cache
-        uses: actions/cache@v5
+        uses: actions/cache@v6
         with:
           path: |
             ~/.cache/go-build
