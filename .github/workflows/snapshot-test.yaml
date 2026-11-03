@@ -5,10 +5,10 @@ on:
     inputs:
       xtest_version:
         type: string
-        default: v0.3.6
+        default: v0.3.7
       crossplane_version:
         type: string
-        default: v2.4.2
+        default: v2.5.0
 
 jobs:
   snapshot-test:
